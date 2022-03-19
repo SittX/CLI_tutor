@@ -8,7 +8,7 @@ using UtilitiesLibrary;
 
 namespace FileNavigation
 {
-    internal class WindowCLI : CommandLine,ICommandLine
+    internal class WindowCLI : ConsoleController,IConsole
     {
         /// <summary>
         /// Get the current directory 
@@ -22,7 +22,10 @@ namespace FileNavigation
         public void Run()
         {
             GetPaths();
+            GetFunctionsInput(4);
             DisplayCommands();
+            GetCommand();
+            
         }
 
         public void GetPaths()

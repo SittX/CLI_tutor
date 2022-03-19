@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileNavigation
 {
-    internal interface ICommandLine
+    internal interface IConsole
     {
          string CurrentDirectory { get; }
          string RootDirectory { get; }

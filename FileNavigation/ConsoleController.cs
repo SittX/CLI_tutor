@@ -8,38 +8,40 @@ using static UtilitiesLibrary.DisplayText;
 
 namespace FileNavigation
 {
-    public class CommandLine
+    public class ConsoleController
     {
         private List<List<string>> _commands = CommandsList.AllCommands;
+        public int FuncNumber { get; private set; }
+        public bool exit { get; private set; }
+        public string CurrentCommand { get; private set; }
+        public string CurrentOperationType { get; private set; }
 
         public void DisplayCurrentDirectory(string path)
         {
             Display(ConsoleColor.Green, path, true);
         }
 
-
-        public string ChangeDirectory(string path,string destinationPath)
+        public void ChangeDirectory(string path,string destinationPath)
         {
             try
             {
                 if (Directory.Exists(destinationPath))
                 {
                     DisplayCurrentDirectory(destinationPath);
-                    return destinationPath;
+                    //return destinationPath;
                 }
                 else
                 {
                     DisplayErrorMsg("This directory doesn't exists.\nPlease enter a valid directory name.");
-                    return path;
+                    //return path;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error : {e.Message}");
+                System.Console.WriteLine($"Error : {e.Message}");
                 throw;
             }
         }
-
 
         public void PrintWorkingDirectory(string currentDir)
         {
@@ -54,38 +56,15 @@ namespace FileNavigation
             }
         }
 
-
-        public int DisplayFunctionsList()
+        public void DisplayFunctionsList()
         {
-            while (true)
-            {
-                try
-                {
-                    Display(ConsoleColor.Gray,"Choose the operation you want to do.\n\n");
-                    Display(ConsoleColor.DarkBlue,"(1) Create\t(2) Read\t(3) Write\t(4) Delete\n\n");
-                Display(ConsoleColor.Green,"=> ");
-                    int operationNo = Convert.ToInt32(Console.ReadLine());
-                    if(operationNo < 1 || operationNo > 4)
-                    {
-                        DisplayErrorMsg("Invalid choice.\nPlease try again.");
-                    }
-                    else
-                    {
-                        return operationNo;
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    DisplayErrorMsg($"Error : {e.Message}");
-                }
-            }
+         Display(ConsoleColor.Gray,"Choose the operation you want to do.\n\n");
+         Display(ConsoleColor.DarkBlue,"(1) Create\t(2) Read\t(3) Write\t(4) Delete\n\n");
+         Display(ConsoleColor.Green,"=> ");
         }
-
 
         public void DisplayCommands()
         {
-            int FuncNumber = DisplayFunctionsList();
             switch (FuncNumber)
             {
                 case 1:
@@ -121,5 +100,59 @@ namespace FileNavigation
             }
         }
 
+        public void GetFunctionsInput(int ListLength)
+        {
+            bool exitLoop = false;
+            while(!exitLoop)
+            try
+            {
+                DisplayFunctionsList();
+                int input = Convert.ToInt32(System.Console.ReadLine());
+                if(input >= ListLength)
+                {
+                    DisplayErrorMsg("Invalid input");
+                    DisplayErrorMsg("Please try again.");
+                    exitLoop = false;
+                }
+                else
+                {
+                        switch (input)
+                        {
+                            case 1:
+                                CurrentOperationType = "Create";
+                                break;
+                            case 2:
+                                CurrentOperationType = "Read";
+                                break;
+                            case 3:
+                                CurrentOperationType = "Update";
+                                break;
+                            case 4:
+                                CurrentOperationType = "Delete";
+                                break;
+                            default:
+                                break;
+                        }
+                    FuncNumber = input;
+                    exitLoop = true;
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayErrorMsg(e.Message);
+                DisplayErrorMsg("Please try again.");
+            }
+        }
+
+        public void GetCommand()
+        {
+            string input = Console.ReadLine();
+            CurrentCommand = input;
+        }
+
+        public void InvokeCommand(string CurrentCommand)
+        {
+
+        }
     }
 }

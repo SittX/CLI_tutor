@@ -20,13 +20,13 @@ namespace FileNavigation
         {
             if(OperatingSystem.IsMacOS() && OperatingSystem.IsLinux())
             {
-                Console.WriteLine("Sorry our app is not currently working in MacOS and Linux distributions.");
+                System.Console.WriteLine("Sorry our app is not currently working in MacOS and Linux distributions.");
             }else if (OperatingSystem.IsWindows())
             {
                 _window.Run();
             }else
             {
-                Console.WriteLine("Can't detect the OS. Please try again.");
+                System.Console.WriteLine("Can't detect the OS. Please try again.");
             }
         }
             
