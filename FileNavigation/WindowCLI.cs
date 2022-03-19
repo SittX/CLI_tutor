@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FileNavigation;
-using UtilitiesLibrary;
-
+﻿using FileNavigation;
 namespace FileNavigation
 {
-    internal class WindowCLI : ConsoleController,IConsole
+    internal class WindowCLI : ConsoleController
     {
         /// <summary>
         /// Get the current directory 
@@ -16,23 +9,25 @@ namespace FileNavigation
         /// Display the available functions of the application to the user in a loop
         /// Users should be able to choose the functions after they've finished the previous one
         /// </summary>
-        public string CurrentDirectory { get; private set; }
-        public string RootDirectory { get; private set; }
+
 
         public void Run()
         {
-            GetPaths();
-            GetFunctionsInput(4);
-            DisplayCommands();
-            GetCommand();
-            
+            while (!exit)
+            {
+                GetPaths();
+                ActionMethods.DisplayCurrentDirectory(CurrentDirectory);
+                GetFunctionsInput(5);
+                if (!exit)
+                {
+                    DisplayCommands();
+                    ProcessInput();
+                    RunCommands();
+                }
+                ClearData();
+            }
         }
 
-        public void GetPaths()
-        {
-            RootDirectory = UserDirectory.GetUserProfilePath(Environment.UserName);
-            CurrentDirectory = RootDirectory;
-        }
 
 
     }

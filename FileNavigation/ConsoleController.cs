@@ -1,69 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using static UtilitiesLibrary.DisplayText;
+﻿using static UtilitiesLibrary.DisplayText;
 
 namespace FileNavigation
 {
-    public class ConsoleController
+    public abstract class ConsoleController
     {
         private List<List<string>> _commands = CommandsList.AllCommands;
         public int FuncNumber { get; private set; }
-        public bool exit { get; private set; }
+        public bool exit { get; private set; } = false;
         public string CurrentCommand { get; private set; }
         public string CurrentOperationType { get; private set; }
+        public string UserInput { get; private set; }
+        public string FileExtension { get; private set; }
+        protected string CurrentDirectory { get; private set; }
+        protected string RootDirectory { get; private set; }
 
-        public void DisplayCurrentDirectory(string path)
-        {
-            Display(ConsoleColor.Green, path, true);
-        }
-
-        public void ChangeDirectory(string path,string destinationPath)
-        {
-            try
-            {
-                if (Directory.Exists(destinationPath))
-                {
-                    DisplayCurrentDirectory(destinationPath);
-                    //return destinationPath;
-                }
-                else
-                {
-                    DisplayErrorMsg("This directory doesn't exists.\nPlease enter a valid directory name.");
-                    //return path;
-                }
-            }
-            catch (Exception e)
-            {
-                System.Console.WriteLine($"Error : {e.Message}");
-                throw;
-            }
-        }
-
-        public void PrintWorkingDirectory(string currentDir)
-        {
-            try
-            {
-                Display(ConsoleColor.DarkBlue,currentDir);
-            }
-            catch (Exception e)
-            {
-                DisplayErrorMsg(e.Message);
-                throw;
-            }
-        }
-
-        public void DisplayFunctionsList()
+        protected void DisplayFunctionsList()
         {
          Display(ConsoleColor.Gray,"Choose the operation you want to do.\n\n");
-         Display(ConsoleColor.DarkBlue,"(1) Create\t(2) Read\t(3) Write\t(4) Delete\n\n");
+         Display(ConsoleColor.DarkBlue,"(1) Create\t(2) Read\t(3) Write\t(4) Delete\t(5) Exit\n\n");
          Display(ConsoleColor.Green,"=> ");
         }
 
-        public void DisplayCommands()
+        protected void DisplayCommands()
         {
             switch (FuncNumber)
             {
@@ -100,7 +58,7 @@ namespace FileNavigation
             }
         }
 
-        public void GetFunctionsInput(int ListLength)
+        protected void GetFunctionsInput(int ListLength)
         {
             bool exitLoop = false;
             while(!exitLoop)
@@ -108,7 +66,7 @@ namespace FileNavigation
             {
                 DisplayFunctionsList();
                 int input = Convert.ToInt32(System.Console.ReadLine());
-                if(input >= ListLength)
+                if(input > ListLength)
                 {
                     DisplayErrorMsg("Invalid input");
                     DisplayErrorMsg("Please try again.");
@@ -130,11 +88,18 @@ namespace FileNavigation
                             case 4:
                                 CurrentOperationType = "Delete";
                                 break;
+                            case 5:
+                                CurrentOperationType = "Exit";
+                                exit = true;
+                                break;
+                            case 6:
+                                CurrentOperationType = "Clear";
+                                break;
                             default:
                                 break;
                         }
                     FuncNumber = input;
-                    exitLoop = true;
+                        exitLoop = true;
                 }
             }
             catch (Exception e)
@@ -144,15 +109,71 @@ namespace FileNavigation
             }
         }
 
-        public void GetCommand()
+        protected void ProcessInput() 
         {
-            string input = Console.ReadLine();
-            CurrentCommand = input;
+
+            if (CurrentOperationType == "Create" || CurrentOperationType == "Delete" || CurrentOperationType == "Update")
+            {
+                string input = Console.ReadLine().Trim();
+                int i = 0;
+                int j = input.IndexOf(' ');
+                while(i < j)
+                {
+                    CurrentCommand += input[i];
+                    i++;
+                }
+                    while (j < input.Length)
+                {
+                    UserInput += input[j];
+                    j++;
+                }
+            }
+            else
+            {
+                string input = Console.ReadLine().Trim();
+                CurrentCommand = input;
+            }
         }
 
-        public void InvokeCommand(string CurrentCommand)
+        protected void CheckingFileOrDirectory()
         {
+            
+        }
 
+        protected void RunCommands()
+        {
+            switch (CurrentCommand)
+            {
+                case "touch":
+                    ActionMethods.CreateFile(CurrentDirectory,UserInput);
+                    break;
+                case "mkdir":
+                    ActionMethods.CreateDirectory(CurrentDirectory, UserInput);
+                    break;
+                case "ls":
+                    ActionMethods.ListFiles(CurrentDirectory);
+                    break;
+                case "cat":
+                    break;
+                case "rm":
+                    ActionMethods.DeleteFile(CurrentDirectory, UserInput);
+                    break;
+                case "rmdir":
+                    break;
+            }
+        }
+
+        protected void GetPaths()
+        {
+            RootDirectory = UserDirectory.GetUserProfilePath(Environment.UserName);
+            CurrentDirectory = RootDirectory;
+        }
+
+        protected void ClearData()
+        {
+            CurrentCommand = null;
+            CurrentOperationType = null;
+            UserInput = null;
         }
     }
 }
