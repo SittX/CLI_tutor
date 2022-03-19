@@ -22,7 +22,7 @@ namespace FileNavigation
         public void Run()
         {
             GetPaths();
-            DisplayText.Display(ConsoleColor.Red,RootDirectory,true);
+            DisplayCommands();
         }
 
         public void GetPaths()
