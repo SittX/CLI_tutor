@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileNavigation
 {
-    internal class LinuxCLI : ConsoleController, IConsole
+    internal class LinuxCLI : ConsoleController
     {
         public string CurrentDirectory { get; private set; }
         public string RootDirectory { get; private set; }

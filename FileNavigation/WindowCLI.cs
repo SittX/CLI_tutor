@@ -1,4 +1,5 @@
 ﻿using FileNavigation;
+using static UtilitiesLibrary.IOMethods;
 namespace FileNavigation
 {
     internal class WindowCLI : ConsoleController
@@ -16,15 +17,16 @@ namespace FileNavigation
             while (!exit)
             {
                 GetPaths();
-                ActionMethods.DisplayCurrentDirectory(CurrentDirectory);
-                GetFunctionsInput(5);
+                DisplayCurrentDirectory(CurrentDirectory);
+                GetOperationInput();
+                // If the user didn't choose to exit the application, continue running the methods below
                 if (!exit)
                 {
                     DisplayCommands();
-                    ProcessInput();
+                    GetCommand();
                     RunCommands();
+                    ClearData();
                 }
-                ClearData();
             }
         }
 

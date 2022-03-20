@@ -1,29 +1,34 @@
-﻿using static UtilitiesLibrary.DisplayText;
+﻿using System.Text;
+using static UtilitiesLibrary.DisplayText;
+using static UtilitiesLibrary.IOMethods;
 
 namespace FileNavigation
 {
     public abstract class ConsoleController
     {
         private List<List<string>> _commands = CommandsList.AllCommands;
-        public int FuncNumber { get; private set; }
+        private Dictionary<int, string> _operationsDictionary = OperationDictionary.CreateDictionary();
         public bool exit { get; private set; } = false;
-        public string CurrentCommand { get; private set; }
-        public string CurrentOperationType { get; private set; }
-        public string UserInput { get; private set; }
-        public string FileExtension { get; private set; }
+        private string CurrentCommand { get;  set; }
+        private string CurrentOperation { get;  set; }
+        private string UserInput { get;  set; }
+        private int OperationNum { get;  set; }
         protected string CurrentDirectory { get; private set; }
-        protected string RootDirectory { get; private set; }
+        protected string RootDirectory { get;  private set; }
 
-        protected void DisplayFunctionsList()
+        protected void DisplayOperationTypes()
         {
          Display(ConsoleColor.Gray,"Choose the operation you want to do.\n\n");
-         Display(ConsoleColor.DarkBlue,"(1) Create\t(2) Read\t(3) Write\t(4) Delete\t(5) Exit\n\n");
-         Display(ConsoleColor.Green,"=> ");
+        foreach(KeyValuePair<int,string> operation in _operationsDictionary)
+            {
+                Display(ConsoleColor.DarkBlue,$"({operation.Key}) {operation.Value}\t");
+            }
+         Display(ConsoleColor.Green,"\n\n=> ");
         }
 
         protected void DisplayCommands()
         {
-            switch (FuncNumber)
+            switch (OperationNum)
             {
                 case 1:
                      Display(ConsoleColor.Gray,"Create Commands :",true);
@@ -31,6 +36,7 @@ namespace FileNavigation
                     {
                         Display(ConsoleColor.DarkBlue,"# "+command + '\n');
                     }
+                    Display(ConsoleColor.Gray, "Press x to exit", true);
                     break;
                 case 2:
                     Display(ConsoleColor.Gray,"Read Commands :",true);
@@ -38,6 +44,7 @@ namespace FileNavigation
                     {
                         Display(ConsoleColor.DarkBlue,"# " + command + '\n');
                     }
+                    Display(ConsoleColor.Gray, "Press x to exit", true);
                     break;
                 case 3:
                     Display(ConsoleColor.Gray,"Update Commands :",true);
@@ -45,6 +52,7 @@ namespace FileNavigation
                     {
                         Display(ConsoleColor.DarkBlue,"# " + command + '\n');
                     }
+                    Display(ConsoleColor.Gray, "Press x to exit", true);
                     break;
                 case 4:
                     Display(ConsoleColor.Gray,"Delete Commands :",true);
@@ -52,92 +60,97 @@ namespace FileNavigation
                     {
                         Display(ConsoleColor.DarkBlue,"# " + command + '\n');
                     }
+                    Display(ConsoleColor.Gray, "Press x to exit", true);
                     break;
                 default:
                     break;
             }
         }
 
-        protected void GetFunctionsInput(int ListLength)
+        protected void GetOperationInput()
         {
-            bool exitLoop = false;
-            while(!exitLoop)
+            bool operationLoop = false;
+            int operationListCount = _operationsDictionary.Count;
+
+            /* Usage of While loop : get user input for operations 
+             if getting input is successful , exit the loop and continue executing the rest of the application. If it's failed, restart the whole process again
+             */
+            while (!operationLoop)
+            {
+                    try
+                    {
+                        DisplayOperationTypes();
+
+                        int input = Convert.ToInt32(Console.ReadLine());
+                    OperationNum = input;
+                        if(input > operationListCount)
+                        {
+                            DisplayErrorMsg("Invalid input.\nPlease try again.");
+                            operationLoop = true;
+                        }
+                        else if (input == 5)
+                        {
+                        CurrentOperation = _operationsDictionary[input];
+                        // exit variable is associated with the whole application
+                        exit = true;
+                        }
+                        else
+                        {
+                            // Search the input value in _operationDictionary and assign to the     CurrentOperation property
+                                string InputValue;
+                                if(_operationsDictionary.TryGetValue(input, out InputValue))
+                                {
+                                    CurrentOperation = InputValue;
+                                }
+                                else
+                                {
+                                    DisplayErrorMsg("Invalid choice.\nPlease try again.");
+                                }
+                         }
+                        // Exit the loop
+                        operationLoop = true;
+                    }
+                    catch (Exception e)
+                    {
+                        DisplayErrorMsg(e.Message);
+                        DisplayErrorMsg("Please try again.");
+                    }
+            }
+        }
+
+        protected void GetCommand() 
+        {
+            
             try
             {
-                DisplayFunctionsList();
-                int input = Convert.ToInt32(System.Console.ReadLine());
-                if(input > ListLength)
+                string input = Console.ReadLine().Trim();
+                if (CurrentOperation == "Read" && input != "x")
                 {
-                    DisplayErrorMsg("Invalid input");
-                    DisplayErrorMsg("Please try again.");
-                    exitLoop = false;
+                    CurrentCommand = input;
+                }
+                else if (input.ToLower() == "x")
+                {
+                    Display(ConsoleColor.Gray,"Exit method",true);
+                    Console.Clear();
                 }
                 else
                 {
-                        switch (input)
-                        {
-                            case 1:
-                                CurrentOperationType = "Create";
-                                break;
-                            case 2:
-                                CurrentOperationType = "Read";
-                                break;
-                            case 3:
-                                CurrentOperationType = "Update";
-                                break;
-                            case 4:
-                                CurrentOperationType = "Delete";
-                                break;
-                            case 5:
-                                CurrentOperationType = "Exit";
-                                exit = true;
-                                break;
-                            case 6:
-                                CurrentOperationType = "Clear";
-                                break;
-                            default:
-                                break;
-                        }
-                    FuncNumber = input;
-                        exitLoop = true;
+                    // split the input into 'command' and 'userInput' parts
+                    string[] splitInput = input.Split(' ');
+                    CurrentCommand = splitInput[0];
+                    UserInput = splitInput[1];
+                    // Check if the user input is a file or a directory 
+                    //string userInput = splitInput[1];
+                    //if (userInput.Contains('.'))
+                    //{
+
+                    //}
                 }
             }
             catch (Exception e)
             {
                 DisplayErrorMsg(e.Message);
-                DisplayErrorMsg("Please try again.");
             }
-        }
-
-        protected void ProcessInput() 
-        {
-
-            if (CurrentOperationType == "Create" || CurrentOperationType == "Delete" || CurrentOperationType == "Update")
-            {
-                string input = Console.ReadLine().Trim();
-                int i = 0;
-                int j = input.IndexOf(' ');
-                while(i < j)
-                {
-                    CurrentCommand += input[i];
-                    i++;
-                }
-                    while (j < input.Length)
-                {
-                    UserInput += input[j];
-                    j++;
-                }
-            }
-            else
-            {
-                string input = Console.ReadLine().Trim();
-                CurrentCommand = input;
-            }
-        }
-
-        protected void CheckingFileOrDirectory()
-        {
-            
         }
 
         protected void RunCommands()
@@ -145,18 +158,18 @@ namespace FileNavigation
             switch (CurrentCommand)
             {
                 case "touch":
-                    ActionMethods.CreateFile(CurrentDirectory,UserInput);
+                    CreateFile(CurrentDirectory,UserInput);
                     break;
                 case "mkdir":
-                    ActionMethods.CreateDirectory(CurrentDirectory, UserInput);
+                    CreateDirectory(CurrentDirectory, UserInput);
                     break;
                 case "ls":
-                    ActionMethods.ListFiles(CurrentDirectory);
+                    ListFiles(CurrentDirectory);
                     break;
                 case "cat":
                     break;
                 case "rm":
-                    ActionMethods.DeleteFile(CurrentDirectory, UserInput);
+                    DeleteFile(CurrentDirectory, UserInput);
                     break;
                 case "rmdir":
                     break;
@@ -172,7 +185,7 @@ namespace FileNavigation
         protected void ClearData()
         {
             CurrentCommand = null;
-            CurrentOperationType = null;
+            CurrentOperation = null;
             UserInput = null;
         }
     }

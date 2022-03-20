@@ -1,9 +1,13 @@
-﻿using static UtilitiesLibrary.DisplayText;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static UtilitiesLibrary.DisplayText;
 
-namespace FileNavigation
+namespace UtilitiesLibrary
 {
-     internal static class ActionMethods
+    public static class IOMethods
     {
         public static void DisplayCurrentDirectory(string path)
         {
@@ -45,7 +49,7 @@ namespace FileNavigation
             }
         }
 
-        public static void CreateFile(string path,string fileName)
+        public static void CreateFile(string path, string fileName)
         {
             try
             {
@@ -59,12 +63,12 @@ namespace FileNavigation
             }
         }
 
-        public static void CreateDirectory(string path,string dirName)
+        public static void CreateDirectory(string path, string dirName)
         {
             try
             {
-            string dirPath = $"{path}/{dirName}";
-            Directory.CreateDirectory(dirPath);
+                string dirPath = $"{path}/{dirName}";
+                Directory.CreateDirectory(dirPath);
             }
             catch (Exception e)
             {
@@ -78,7 +82,7 @@ namespace FileNavigation
             try
             {
                 string[] files = Directory.GetFiles(path);
-                foreach(var file in files)
+                foreach (var file in files)
                 {
                     Display(ConsoleColor.Cyan, file, true);
                 }
