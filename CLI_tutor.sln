@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileNavigation", "FileNavig
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesLibrary", "Utility\UtilitiesLibrary.csproj", "{62BEE82F-1E62-4886-A2AA-2C25D95AF551}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileNavigation-v2", "FileNavigation-v2\FileNavigation-v2.csproj", "{A70FE45E-20F4-4464-A70B-D9FCEF6453C7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{62BEE82F-1E62-4886-A2AA-2C25D95AF551} = {62BEE82F-1E62-4886-A2AA-2C25D95AF551}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{62BEE82F-1E62-4886-A2AA-2C25D95AF551}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62BEE82F-1E62-4886-A2AA-2C25D95AF551}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62BEE82F-1E62-4886-A2AA-2C25D95AF551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A70FE45E-20F4-4464-A70B-D9FCEF6453C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A70FE45E-20F4-4464-A70B-D9FCEF6453C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A70FE45E-20F4-4464-A70B-D9FCEF6453C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A70FE45E-20F4-4464-A70B-D9FCEF6453C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,13 @@
-﻿using System.Security.Principal;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace FileNavigation
+namespace UtilitiesLibrary
 {
-    internal static class UserDirectory
+    public static class UserDirectory
     {
         public static string GetUserSID(string userName)
         {
