@@ -12,6 +12,7 @@ namespace FileNavigation_v2
         public string CurrentDirectory { get; private set; }
         public string RootDirctory { get; private set; }
         private string CRUDInput;
+        private string Command;
         public Window()
         {
             RootDirctory = GetUserProfilePath(Environment.UserName);

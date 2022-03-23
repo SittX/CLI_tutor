@@ -109,19 +109,16 @@ namespace FileNavigation_v2
 
         protected void GetInputForCmd()
         {
-            string input = Console.ReadLine();
-            foreach(KeyValuePair<string,Dictionary<string,string>> command in CommandsDict)
+            string input = Console.ReadLine().Trim();
+            foreach(var command in CommandsDict.Values)
             {
-                foreach(KeyValuePair<string,string> cmd in command.Value)
+                if (command.ContainsKey(input))
                 {
-                    if(input != cmd.Key)
-                    {
-                        Console.WriteLine("This command is not available");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Check!");
-                    }
+                    //commandInput = input;
+                }
+                else
+                {
+                    DisplayErrorMsg("Invalid commend");
                 }
             }
         }
