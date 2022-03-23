@@ -1,7 +1,9 @@
-﻿
+﻿using FileNavigation_v2;
+Run();
 
-
-
+void Run(){
+    CheckOS();
+}
 
 
  void CheckOS()
@@ -12,7 +14,8 @@
     }
     else if (OperatingSystem.IsWindows())
     {
-        Console.WriteLine("Window");
+        Window window = new Window();
+        window.Run();
     }
     else
     {

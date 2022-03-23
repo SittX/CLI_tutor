@@ -4,15 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace FileNavigation
+namespace FileNavigation_v2
 {
-    internal class App
+    internal interface ICommandLine
     {
-        private WindowCLI _window = new WindowCLI();
-
-
-        
-            
     }
 }

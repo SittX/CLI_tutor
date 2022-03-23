@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace UtilitiesLibrary
 {
-    internal class UserDirectory
+
+    public static class UserDirectory
+
     {
         public static string GetUserSID(string userName)
         {
